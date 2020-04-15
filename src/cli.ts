@@ -4,8 +4,9 @@ require('@buttercup/app-env/native');
 import arg from 'arg';
 
 export function cli(args) {
-  console.log(args);
   const options = parseArgumentsIntoOptions(args);
+  const debug = options.debug || false;
+  if (debug) console.log(args);
   const homedir = require('os').homedir();
   const bcupFile = options.bcupPath || `${homedir}/.bcup-cli/vault.bcup`;
 
@@ -14,18 +15,19 @@ export function cli(args) {
   const prompt = require('prompt-sync')();
 
   const { FileDatasource } = Datasources;
-  const debug = options.debug || false;
   const fileDatasource = new FileDatasource(bcupFile);
 
   const password = prompt('Vault password: ', { echo: '*' })
   const credentials = Credentials.fromPassword(password);
-  const titleSearch = prompt('Title filter: ')
 
+  let num;
   try {
     fileDatasource
       .load(credentials)
       .then(Archive.createFromHistory)
       .then(archive => {
+        do {
+          const titleSearch = prompt('Title filter: ')
           const re = new RegExp(titleSearch, 'i');
           const entries = archive.findEntriesByProperty('title', re);
           entries.forEach((entry, idx) => {
@@ -33,11 +35,12 @@ export function cli(args) {
               const username = entry.getProperty('username');
               const url = entry.getProperty('URL');
               const group = entry.getGroup().getTitle();
-              console.log(idx + 1, group, '//', title, '//', url, '//', username);
+              console.log(`${idx + 1} ${group} / ${title} | url: ${url} | username: ${username}`);
           });
 
-          const num = prompt('Select entry to copy: ')
+          num = prompt('Select entry to copy or enter for search again: ')
           if (debug) console.log(num);
+        } while (!num.length)
           const pass = entries[num - 1].getProperty('password');
           clipboardy.writeSync(pass);
       });

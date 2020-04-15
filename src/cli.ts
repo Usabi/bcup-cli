@@ -27,9 +27,11 @@ export function cli(args) {
       .then(Archive.createFromHistory)
       .then(archive => {
         do {
+          console.log("\n");
           const titleSearch = prompt('Title filter: ')
           const re = new RegExp(titleSearch, 'i');
           const entries = archive.findEntriesByProperty('title', re);
+          console.log('0 exit');
           entries.forEach((entry, idx) => {
               const title = entry.getProperty('title');
               const username = entry.getProperty('username');
@@ -38,9 +40,11 @@ export function cli(args) {
               console.log(`${idx + 1} ${group} / ${title} | url: ${url} | username: ${username}`);
           });
 
+          console.log("\n");
           num = prompt('Select entry to copy or enter for search again: ')
           if (debug) console.log(num);
         } while (!num.length)
+          if (num == 0) return;
           const pass = entries[num - 1].getProperty('password');
           clipboardy.writeSync(pass);
       });

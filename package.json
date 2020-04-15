@@ -1,6 +1,6 @@
 {
   "name": "bcup-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Lightweight Buttercup password manager cli",
   "bin": {
     "bcup-cli": "bin/bcup-cli"
@@ -26,10 +26,12 @@
     "@buttercup/app-env": "^0.5.0",
     "@types/node": "^13.9.2",
     "arg": "^4.1.3",
+    "bcup-cli": "^1.0.3",
     "buttercup": "^3.0.0",
     "clipboardy": "^2.3.0",
     "config": "^3.3.0",
     "esm": "^3.2.25",
+    "global": "^4.4.0",
     "js-yaml": "^3.13.1",
     "prompt-sync": "^4.2.0"
   }

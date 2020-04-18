@@ -2,6 +2,7 @@
 
 require('@buttercup/app-env/native');
 import arg from 'arg';
+import { flatten, uniqBy } from 'lodash';
 
 export function cli(args) {
   const options = parseArgumentsIntoOptions(args);
@@ -29,9 +30,14 @@ export function cli(args) {
       .then(archive => {
         do {
           console.log("\n");
-          const titleSearch = prompt('Title filter: ')
+          const titleSearch = prompt('Search text (in folder or title): ')
           const re = new RegExp(titleSearch, 'i');
           entries = archive.findEntriesByProperty('title', re);
+          const groups = archive.findGroupsByTitle(re);
+          const groupEntries = groups.map(group => group.getEntries());
+          entries = flatten(groupEntries).concat(entries);
+          if (debug) console.log(entries);
+          entries = uniqBy(entries, entry => entry.id);
           console.log('0 exit');
           entries.forEach((entry, idx) => {
               const title = entry.getProperty('title');

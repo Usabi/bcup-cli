@@ -21,6 +21,7 @@ export function cli(args) {
   const credentials = Credentials.fromPassword(password);
 
   let num;
+  let entries;
   try {
     fileDatasource
       .load(credentials)
@@ -30,7 +31,7 @@ export function cli(args) {
           console.log("\n");
           const titleSearch = prompt('Title filter: ')
           const re = new RegExp(titleSearch, 'i');
-          const entries = archive.findEntriesByProperty('title', re);
+          entries = archive.findEntriesByProperty('title', re);
           console.log('0 exit');
           entries.forEach((entry, idx) => {
               const title = entry.getProperty('title');

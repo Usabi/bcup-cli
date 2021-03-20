@@ -20,7 +20,9 @@ Usage
 
 Your vault password will be prompted, then a title entry search filter.
 
-Once the results are displayed, you can select an entry that will be copied to your clipboard.
+A search against group and entry titles will be done.
+
+Once the results are displayed, you can select an entry that will be copied to your clipboard. You can also select '0' to exit or enter to repeat search.
 
 NOTE: If no bcup path is specified, the vault will be supposed to be ~/.bcup-cli/vault.bcup
 

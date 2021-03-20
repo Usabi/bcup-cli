@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-require('@buttercup/app-env/native');
 import arg from 'arg';
 import { flatten, uniqBy } from 'lodash';
 
@@ -11,14 +10,17 @@ export function cli(args) {
   const homedir = require('os').homedir();
   const bcupFile = options.bcupPath || `${homedir}/.bcup-cli/vault.bcup`;
 
-  const { Archive, Datasources, Credentials } = require('buttercup');
+  const { Vault, FileDatasource, Credentials, init, Search } = require('buttercup');
   const clipboardy = require('clipboardy');
   const prompt = require('prompt-sync')();
-
-  const { FileDatasource } = Datasources;
-  const fileDatasource = new FileDatasource(bcupFile);
-
   const password = prompt('Vault password: ', { echo: '*' })
+
+  init();
+  const datasourceCredentials = Credentials.fromDatasource({
+    path: bcupFile
+  }, password)
+  const fileDatasource = new FileDatasource(datasourceCredentials);
+
   const credentials = Credentials.fromPassword(password);
 
   let num;
@@ -26,14 +28,14 @@ export function cli(args) {
   try {
     fileDatasource
       .load(credentials)
-      .then(Archive.createFromHistory)
-      .then(archive => {
+      .then(({ format, history }) => Vault.createFromHistory(history, format))
+      .then(vault => {
         do {
           console.log("\n");
           const titleSearch = prompt('Search text (in folder or title): ')
           const re = new RegExp(titleSearch, 'i');
-          entries = archive.findEntriesByProperty('title', re);
-          const groups = archive.findGroupsByTitle(re);
+          entries = vault.findEntriesByProperty('title', re);
+          const groups = vault.findGroupsByTitle(re);
           const groupEntries = groups.map(group => group.getEntries());
           entries = flatten(groupEntries).concat(entries);
           if (debug) console.log(entries);

@@ -1,6 +1,6 @@
 {
   "name": "bcup-cli",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Lightweight Buttercup password manager cli",
   "bin": {
     "bcup-cli": "bin/bcup-cli"
@@ -23,13 +23,12 @@
   "license": "MIT",
   "repository": "https://github.com/Usabi/bcup-cli",
   "dependencies": {
-    "@buttercup/app-env": "^0.5.0",
     "@types/node": "^13.9.2",
     "arg": "^4.1.3",
-    "bcup-cli": "^1.0.3",
-    "buttercup": "^3.0.0",
+    "buttercup": "^5.6.0",
     "clipboardy": "^2.3.0",
     "config": "^3.3.0",
+    "crypto-random-string": "^3.3.0",
     "esm": "^3.2.25",
     "global": "^4.4.0",
     "js-yaml": "^3.13.1",

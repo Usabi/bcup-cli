@@ -52,10 +52,10 @@ export function cli(args) {
           console.log("\n");
           num = prompt('Select entry to copy or enter for search again: ')
           if (debug) console.log(num);
-        } while (!num.length)
           if (num == 0) return;
           const pass = entries[num - 1].getProperty('password');
           clipboardy.writeSync(pass);
+        } while (!num || num !== 0)
       });
     }
     catch(error) {

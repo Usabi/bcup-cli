@@ -51,11 +51,12 @@ export function cli(args) {
 
           console.log("\n");
           num = prompt('Select entry to copy or enter for search again: ')
-          if (debug) console.log(num);
-          if (num == 0) return;
+          if (debug) console.log('num: "'+ num + '"');
+          if (num === '0') return;
+          if (num === '') continue;
           const pass = entries[num - 1].getProperty('password');
           clipboardy.writeSync(pass);
-        } while (!num || num !== 0)
+        } while (true)
       });
     }
     catch(error) {

@@ -12,6 +12,7 @@ export function cli(args) {
 
   const { Vault, FileDatasource, Credentials, init, Search } = require('buttercup');
   const clipboardy = require('clipboardy');
+  const chalk = require('chalk');
   const prompt = require('prompt-sync')();
   const password = prompt('Vault password: ', { echo: '*' })
 
@@ -46,7 +47,8 @@ export function cli(args) {
               const username = entry.getProperty('username');
               const url = entry.getProperty('URL');
               const group = emphSearch(entry.getGroup().getTitle(), re);
-              console.log(`${idx + 1} ${group} / ${title} | url: ${url} | username: ${username}`);
+              const sep = ` ${chalk.bold('|')} `
+              console.log(`${idx + 1} ${group}${chalk.bold('->')}${title}${sep}url: ${url}${sep}username: ${username}`);
           });
 
           console.log("\n");

@@ -32,8 +32,8 @@ export function cli(args) {
       .then(vault => {
         do {
           console.log("\n");
-          const titleSearch = prompt('Search text (in folder or title): ')
-          const re = new RegExp(titleSearch, 'i');
+          const titleSearch = prompt('Search text in folder or title. You can use RegExp: ')
+          const re = new RegExp(titleSearch, 'ig');
           entries = vault.findEntriesByProperty('title', re);
           const groups = vault.findGroupsByTitle(re);
           const groupEntries = groups.map(group => group.getEntries());
@@ -42,10 +42,10 @@ export function cli(args) {
           entries = uniqBy(entries, entry => entry.id);
           console.log('0 exit');
           entries.forEach((entry, idx) => {
-              const title = entry.getProperty('title');
+              const title = emphSearch(entry.getProperty('title'), re);
               const username = entry.getProperty('username');
               const url = entry.getProperty('URL');
-              const group = entry.getGroup().getTitle();
+              const group = emphSearch(entry.getGroup().getTitle(), re);
               console.log(`${idx + 1} ${group} / ${title} | url: ${url} | username: ${username}`);
           });
 
@@ -62,6 +62,17 @@ export function cli(args) {
     catch(error) {
       console.error(error);
     }
+}
+
+function emphSearch(string, re) {
+  const chalk = require('chalk');
+
+  let res;
+  let newString = string;
+  while ((res = re.exec(string)) !== null) {
+    newString = newString.slice(0, res.index) + chalk.red(res[0]) + newString.slice(res.index + res[0].length)
+  }
+  return newString;
 }
 
 function parseArgumentsIntoOptions(rawArgs) {

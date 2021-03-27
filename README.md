@@ -18,7 +18,7 @@ Usage
 
 ```bcup-cli [-b|--bcup-path path_to_buttercup_vault] [-d|--debug]```
 
-Your vault password will be prompted, then a title entry search filter.
+Your vault password will be prompted, then a title entry search filter (string or regexp).
 
 A search against group and entry titles will be done.
 

@@ -56,7 +56,7 @@ export function cli(args) {
           do {
             num = prompt('Select entry to copy or enter for search again: ')
             if (debug) console.log('num: "'+ num + '"');
-            if (num == undefined || num > entries.length || num < 0 || !num.match(/\d+/)) {
+            if (num == undefined || (num.length > 0 && (!num.match(/\d+/) || num > entries.length || num < 0))) {
               console.log(`wrong selection (0-${entries.length})`)
             }
             if (num === '0') return;

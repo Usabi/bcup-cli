@@ -15,6 +15,7 @@ export function cli(args) {
   const chalk = require('chalk');
   const prompt = require('prompt-sync')();
   const password = prompt('Vault password: ', { echo: '*' })
+  if (password == undefined || password.length == 0) return
 
   init();
   const datasourceCredentials = Credentials.fromDatasource({
@@ -52,9 +53,14 @@ export function cli(args) {
           });
 
           console.log("\n");
-          num = prompt('Select entry to copy or enter for search again: ')
-          if (debug) console.log('num: "'+ num + '"');
-          if (num === '0') return;
+          do {
+            num = prompt('Select entry to copy or enter for search again: ')
+            if (debug) console.log('num: "'+ num + '"');
+            if (num == undefined || num > entries.length || num < 0 || !num.match(/\d+/)) {
+              console.log(`wrong selection (0-${entries.length})`)
+            }
+            if (num === '0') return;
+          } while (num == undefined || num.length > 0 && (!num.match(/\d+/) || num > entries.length || num < 0))
           if (num === '') continue;
           const pass = entries[num - 1].getProperty('password');
           clipboardy.writeSync(pass);

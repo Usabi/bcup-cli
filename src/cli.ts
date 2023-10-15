@@ -2,6 +2,7 @@
 
 import arg from 'arg';
 import { flatten, uniqBy } from 'lodash';
+import { name, version, description, author, license, repository } from '../package.json';
 
 export function cli(args) {
   const options = parseArgumentsIntoOptions(args);
@@ -14,6 +15,12 @@ export function cli(args) {
   const clipboardy = require('clipboardy');
   const chalk = require('chalk');
   const prompt = require('prompt-sync')();
+
+  console.log(`= ${name} v${version} (${description}) =`);
+  console.log(`author: ${author}`);
+  console.log(`license: ${license}`);
+  console.log(`repository: ${repository}\n`);
+
   const password = prompt('Vault password: ', { echo: '*' })
   if (password == undefined || password.length == 0) return
 

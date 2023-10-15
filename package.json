@@ -19,7 +19,7 @@
     "cli",
     "bcup-cli"
   ],
-  "author": "Ignacio Aliende García",
+  "author": "Ignacio Aliende García <ialiendeg@gmail.com>",
   "license": "MIT",
   "repository": "https://github.com/Usabi/bcup-cli",
   "dependencies": {

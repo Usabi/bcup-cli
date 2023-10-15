@@ -35,7 +35,7 @@ export function cli(args) {
         do {
           console.log("\n");
           const titleSearch = prompt('Search text in folder or title. You can use RegExp: ')
-          const re = new RegExp(titleSearch, 'ig');
+          const re = new RegExp(titleSearch, 'i');
           entries = vault.findEntriesByProperty('title', re);
           const groups = vault.findGroupsByTitle(re);
           const groupEntries = groups.map(group => group.getEntries());
@@ -44,10 +44,10 @@ export function cli(args) {
           entries = uniqBy(entries, entry => entry.id);
           console.log('0 exit');
           entries.forEach((entry, idx) => {
-              const title = emphSearch(entry.getProperty('title'), re);
+              const title = emphSearch(entry.getProperty('title'), titleSearch);
               const username = entry.getProperty('username');
               const url = entry.getProperty('URL');
-              const group = emphSearch(entry.getGroup().getTitle(), re);
+              const group = emphSearch(entry.getGroup().getTitle(), titleSearch);
               const sep = ` ${chalk.bold('|')} `
               console.log(`${idx + 1} ${group}${chalk.bold('->')}${title}${sep}url: ${url}${sep}username: ${username}`);
           });
@@ -72,8 +72,9 @@ export function cli(args) {
     }
 }
 
-function emphSearch(string, re) {
+function emphSearch(string, titleSearch) {
   const chalk = require('chalk');
+  const re = new RegExp(titleSearch, 'ig');
 
   let res;
   let newString = string;

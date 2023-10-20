@@ -14,7 +14,9 @@ export function cli(args) {
   const { Vault, FileDatasource, Credentials, init, Search } = require('buttercup');
   const clipboardy = require('clipboardy');
   const chalk = require('chalk');
-  const prompt = require('prompt-sync')();
+  const prompt = require('prompt-sync')({
+    history: require('prompt-sync-history')() //open history file
+  });
 
   console.log(`= ${name} v${version} (${description}) =`);
   console.log(`author: ${author}`);
@@ -34,6 +36,8 @@ export function cli(args) {
 
   let num;
   let entries;
+  let titleSearch;
+  let promptText;
   try {
     fileDatasource
       .load(credentials)
@@ -41,7 +45,9 @@ export function cli(args) {
       .then(vault => {
         do {
           console.log("\n");
-          const titleSearch = prompt('Search text in folder or title. You can use RegExp: ')
+          promptText = `Search text in folder or title. You can use RegExp (${titleSearch}): `
+          titleSearch = prompt(promptText, titleSearch);
+          prompt.history.save();
           const re = new RegExp(titleSearch, 'i');
           entries = vault.findEntriesByProperty('title', re);
           const groups = vault.findGroupsByTitle(re);
@@ -61,13 +67,13 @@ export function cli(args) {
 
           console.log("\n");
           do {
-            num = prompt('Select entry to copy or enter for search again: ')
+            num = prompt('Select entry to copy or press enter to search again: ')
             if (debug) console.log('num: "'+ num + '"');
-            if (num == undefined || (num.length > 0 && (!num.match(/\d+/) || num > entries.length || num < 0))) {
+            if (invalidSelection(num, entries.length)) {
               console.log(`wrong selection (0-${entries.length})`)
             }
             if (num === '0') return;
-          } while (num == undefined || num.length > 0 && (!num.match(/\d+/) || num > entries.length || num < 0))
+          } while (invalidSelection(num, entries.length))
           if (num === '') continue;
           const pass = entries[num - 1].getProperty('password');
           clipboardy.writeSync(pass);
@@ -77,6 +83,10 @@ export function cli(args) {
     catch(error) {
       console.error(error);
     }
+}
+
+function invalidSelection(num, max) {
+  return num == undefined || (num.length > 0 && (!num.match(/\d+/) || num > max || num < 0))
 }
 
 function emphSearch(string, titleSearch) {

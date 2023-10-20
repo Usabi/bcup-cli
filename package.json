@@ -1,6 +1,6 @@
 {
   "name": "bcup-cli",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Lightweight Buttercup password manager cli",
   "bin": {
     "bcup-cli": "bin/bcup-cli"

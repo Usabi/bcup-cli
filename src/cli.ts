@@ -1,21 +1,24 @@
 #!/usr/bin/env node
 
 import arg from 'arg';
-import { flatten, uniqBy } from 'lodash';
+import flatten from 'lodash/flatten';
+import uniqBy from 'lodash/uniqBy';
 import { name, version, description, author, license, repository } from '../package.json';
+import { Vault, FileDatasource, Credentials, init } from 'buttercup';
+import { homedir } from 'os';
+import clipboardy from 'clipboardy'
+import chalk from 'chalk'
+import promptSync from 'prompt-sync';
+import history from 'prompt-sync-history';
 
 export function cli(args) {
   const options = parseArgumentsIntoOptions(args);
   const debug = options.debug || false;
   if (debug) console.log(args);
-  const homedir = require('os').homedir();
-  const bcupFile = options.bcupPath || `${homedir}/.bcup-cli/vault.bcup`;
+  const bcupFile = options.bcupPath || `${homedir()}/.bcup-cli/vault.bcup`;
 
-  const { Vault, FileDatasource, Credentials, init, Search } = require('buttercup');
-  const clipboardy = require('clipboardy');
-  const chalk = require('chalk');
-  const prompt = require('prompt-sync')({
-    history: require('prompt-sync-history')() //open history file
+  const prompt = promptSync({
+    history: history() //open history file
   });
 
   console.log(`= ${name} v${version} (${description}) =`);
@@ -90,7 +93,6 @@ function invalidSelection(num, max) {
 }
 
 function emphSearch(string, titleSearch) {
-  const chalk = require('chalk');
   const re = new RegExp(titleSearch, 'ig');
 
   let res;
@@ -118,3 +120,5 @@ function parseArgumentsIntoOptions(rawArgs) {
    bcupPath: args['--bcup-path'],
  };
 }
+
+cli(process.argv);
